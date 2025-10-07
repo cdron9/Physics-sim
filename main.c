@@ -6,6 +6,7 @@
 #define TARGET_FPS 120
 #define FRAME_TIME (1000.0f / TARGET_FPS)
 #define GRAVITY 9.8f
+#define FRICTION 0.99f // slowly decrease velocity
 
 typedef struct {
     float centerX, centerY;     // position, center of ball
@@ -137,6 +138,7 @@ void DrawFilledCircle(SDL_Renderer *renderer, int cx, int cy, int radius) {
 }
 
 void grav_updateBallPhys(Ball *ball, float deltaTime) {
+    ball->vx *= FRICTION;
     ball->vy += GRAVITY * 100 * deltaTime;
 }
 
