@@ -5,11 +5,11 @@
 
 #define TARGET_FPS 120
 #define FRAME_TIME (1000.0f / TARGET_FPS)
-#define GRAVITY 800.0f
+#define GRAVITY 9.8f
 
 typedef struct {
     float centerX, centerY;     // position, center of ball
-    float vx, vy;   // velocity in pixels/second
+    float vx, vy;               // velocity in pixels/second
     float radius;
     SDL_Color color;
 } Ball;
@@ -21,6 +21,10 @@ typedef struct{
 
 void DrawFilledCircle(SDL_Renderer *renderer, int cx, int cy, int radius);
 void DrawCircle(SDL_Renderer *renderer, int cx, int cy, int radius);
+
+void grav_updateBallPhys(Ball *ball, float deltaTime);
+void grav_updateBallPos(Ball *ball, float deltaTime);
+
 
 int main(int argc, char* argv[]) {
 
@@ -46,14 +50,14 @@ int main(int argc, char* argv[]) {
     Container container = {640.0f, 480.0f, 300.0f};
     Ball ball = {640.0f, 200.0f, 0.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
     
-    // Uint64 lastTime = SDL_GetTicks();
+    Uint64 lastTime = SDL_GetTicks();
 
     while (!quit) {
 
-       // Uint64 currentTime = SDL_GetTicks();
-       // float deltaTime = (currentTime - lastTime) / 1000.0f; // converted to seconds
-       // lastTime = currentTime;
-        // TODO: use deltatime for physics.
+       Uint64 currentTime = SDL_GetTicks();
+       float deltaTime = (currentTime - lastTime) / 1000.0f; // converted to seconds
+       lastTime = currentTime;
+    // TODO: use deltatime for physics.
 
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_EVENT_QUIT) {
@@ -69,6 +73,9 @@ int main(int argc, char* argv[]) {
 
         SDL_SetRenderDrawColor(renderer, ball.color.r, ball.color.g, ball.color.b, ball.color.a);
         DrawFilledCircle(renderer, ball.centerX, ball.centerY, ball.radius);
+
+        grav_updateBallPhys(&ball, deltaTime);
+        grav_updateBallPos(&ball, deltaTime);
         
 
         SDL_RenderPresent(renderer);
@@ -127,6 +134,15 @@ void DrawFilledCircle(SDL_Renderer *renderer, int cx, int cy, int radius) {
             decision += 2 * (y-x) + 1;
         }
     }
+}
+
+void grav_updateBallPhys(Ball *ball, float deltaTime) {
+    ball->vy += GRAVITY * 100 * deltaTime;
+}
+
+void grav_updateBallPos(Ball *ball, float deltaTime) {
+    ball->centerX += ball->vx * deltaTime;
+    ball->centerY += ball->vy * deltaTime;
 }
     
 
