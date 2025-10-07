@@ -29,5 +29,10 @@ Each frame, gravity increases the object’s downward velocity by an amount prop
 
 ### Collision Detection
 
-For a great resource on high-level collision detection, see:  
-https://www.jeffreythompson.org/collision-detection/table_of_contents.php
+For a FANTASTIC explanation of collision detection, with examples, see:  
+[Jeffrey Thompson’s Collision Detection Guide](https://www.jeffreythompson.org/collision-detection/table_of_contents.php)
+
+Simply, I reversed the equation for the collision detection of two circles.  
+Normally, a collision is detected **when the distance between the two circle centers becomes less than the sum of their radii**.  
+In my code, the opposite is necessary — so I simply reversed this logic.
+
