@@ -3,8 +3,24 @@
 #include <stdlib.h>
 #include <math.h>
 
-void DrawCircle(SDL_Renderer *renderer, int cx, int cy, int radius);
+#define TARGET_FPS 120
+#define FRAME_TIME (1000.0f / TARGET_FPS)
+#define GRAVITY 800.0f
+
+typedef struct {
+    float centerX, centerY;     // position, center of ball
+    float vx, vy;   // velocity in pixels/second
+    float radius;
+    SDL_Color color;
+} Ball;
+
+typedef struct{
+    float centerX, centerY;
+    float radius;
+} Container;
+
 void DrawFilledCircle(SDL_Renderer *renderer, int cx, int cy, int radius);
+void DrawCircle(SDL_Renderer *renderer, int cx, int cy, int radius);
 
 int main(int argc, char* argv[]) {
 
@@ -27,7 +43,18 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    Container container = {640.0f, 480.0f, 300.0f};
+    Ball ball = {640.0f, 200.0f, 0.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
+    
+    // Uint64 lastTime = SDL_GetTicks();
+
     while (!quit) {
+
+       // Uint64 currentTime = SDL_GetTicks();
+       // float deltaTime = (currentTime - lastTime) / 1000.0f; // converted to seconds
+       // lastTime = currentTime;
+        // TODO: use deltatime for physics.
+
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_EVENT_QUIT) {
                 quit = true;
@@ -38,8 +65,10 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer,255,0,0,255);
+        DrawCircle(renderer, container.centerX, container.centerY, container.radius);
 
-        DrawCircle(renderer, 640, 480, 300);
+        SDL_SetRenderDrawColor(renderer, ball.color.r, ball.color.g, ball.color.b, ball.color.a);
+        DrawFilledCircle(renderer, ball.centerX, ball.centerY, ball.radius);
         
 
         SDL_RenderPresent(renderer);
@@ -52,7 +81,7 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-void DrawCircle(SDL_Renderer *renderer, int cx, int cy, int radius) {
+ void DrawCircle(SDL_Renderer *renderer, int cx, int cy, int radius) {
     int x = radius;
     int y = 0;
     int decision = 1 - x;
@@ -98,13 +127,11 @@ void DrawFilledCircle(SDL_Renderer *renderer, int cx, int cy, int radius) {
             decision += 2 * (y-x) + 1;
         }
     }
+}
+    
 
-
-    // check if filled circles are meeting anypixels of outer circles. 
+// check if filled circles are meeting anypixels of outer circles. 
     // create gravtiy
     // create bouncing
     // add more balls
     // collision check those balls
-
-}
-    
