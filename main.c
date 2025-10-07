@@ -6,7 +6,7 @@
 #define TARGET_FPS 120
 #define FRAME_TIME (1000.0f / TARGET_FPS)
 #define GRAVITY 9.8f
-#define FRICTION 0.99f // slowly decrease velocity
+#define FRICTION 0.999f // slowly decrease velocity
 
 typedef struct {
     float centerX, centerY;     // position, center of ball
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     }
 
     Container container = {640.0f, 480.0f, 300.0f};
-    Ball ball = {640.0f, 200.0f, 0.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
+    Ball ball = {640.0f, 200.0f, 200.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
     
     Uint64 lastTime = SDL_GetTicks();
 
