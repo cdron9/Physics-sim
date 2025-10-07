@@ -1,4 +1,4 @@
-This rendering portion of this program is adapted from my code within other GitHub repositories. The adaptations mainly involve passing struct variables into rendering functions instead of using magic numbers.
+This rendering portion of this program is adapted from my code within my other GitHub repositories, specifically the one geniusely named 'SDL mess about'. The adaptations mainly involve passing struct variables into rendering functions instead of using magic numbers.
 
 Gravity is calculated toward the bottom of the window using a discretized form of Newton’s Second Law of Motion, explained below:
 
