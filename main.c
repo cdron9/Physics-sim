@@ -80,7 +80,6 @@ int main(int argc, char* argv[]) {
         
 
         SDL_RenderPresent(renderer);
-        
     }
 
     SDL_DestroyRenderer(renderer);
