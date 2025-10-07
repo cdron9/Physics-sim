@@ -26,6 +26,8 @@ void DrawCircle(SDL_Renderer *renderer, int cx, int cy, int radius);
 void grav_updateBallPhys(Ball *ball, float deltaTime);
 void grav_updateBallPos(Ball *ball, float deltaTime);
 
+void collision_andAction(Ball *ball, Container container);
+
 
 int main(int argc, char* argv[]) {
 
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
     }
 
     Container container = {640.0f, 480.0f, 300.0f};
-    Ball ball = {640.0f, 200.0f, 200.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
+    Ball ball = {640.0f, 300.0f, 200.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
     
     Uint64 lastTime = SDL_GetTicks();
 
@@ -78,7 +80,8 @@ int main(int argc, char* argv[]) {
         grav_updateBallPhys(&ball, deltaTime);
         grav_updateBallPos(&ball, deltaTime);
         
-
+        collision_andAction(&ball, container);
+        
         SDL_RenderPresent(renderer);
     }
 
@@ -146,9 +149,14 @@ void grav_updateBallPos(Ball *ball, float deltaTime) {
     ball->centerY += ball->vy * deltaTime;
 }
     
+void collision_andAction(Ball *ball, Container container) {
+    float x_dist = container.centerX - ball->centerX;
+    float y_dist = container.centerY - ball->centerY;
 
-// check if filled circles are meeting anypixels of outer circles. 
-    // create gravtiy
-    // create bouncing
-    // add more balls
-    // collision check those balls
+    float distance = sqrt( (x_dist*x_dist) + (y_dist*y_dist) );
+
+    if (distance + ball->radius >= container.radius) {
+        // reflect and bounce ball around container
+    }
+}
+
