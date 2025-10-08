@@ -7,6 +7,7 @@
 #define FRAME_TIME (1000.0f / TARGET_FPS)
 #define GRAVITY 9.8f
 #define FRICTION 0.999f // slowly decrease velocity
+#define RESTITUTION 0.9f // to calculate how much to bounce
 
 typedef struct {
     float centerX, centerY;     // position, center of ball
@@ -51,7 +52,7 @@ int main(int argc, char* argv[]) {
     }
 
     Container container = {640.0f, 480.0f, 300.0f};
-    Ball ball = {640.0f, 300.0f, 200.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
+    Ball ball = {640.0f, 300.0f, 600.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
     
     Uint64 lastTime = SDL_GetTicks();
 
@@ -150,13 +151,36 @@ void grav_updateBallPos(Ball *ball, float deltaTime) {
 }
     
 void collision_andAction(Ball *ball, Container container) {
-    float x_dist = container.centerX - ball->centerX;
-    float y_dist = container.centerY - ball->centerY;
+    float x_dist = ball->centerX - container.centerX;  // Vector from container center to ball
+    float y_dist = ball->centerY - container.centerY;
 
-    float distance = sqrt( (x_dist*x_dist) + (y_dist*y_dist) );
+    float distance = sqrt((x_dist * x_dist) + (y_dist * y_dist));
+
+    // Avoid division by zero if ball is exactly at center
+    if (distance < 0.001f) {
+        distance = 0.001f;
+    }
 
     if (distance + ball->radius >= container.radius) {
-        // reflect and bounce ball around container
+        // calculate the normal
+        float nx = -x_dist / distance;  // negative to reflect off inside of cont
+        float ny = -y_dist / distance;
+        
+        // calculate dot product of velocity & normal
+        float dot = ball->vx * nx + ball->vy * ny;
+        
+        // only reflect if moving towards the wall (dot < 0 since normal points inward)
+        if (dot < 0) {
+            ball->vx = ball->vx - 2 * dot * nx;
+            ball->vy = ball->vy - 2 * dot * ny;
+            
+            // apply energy loss (bounciness)
+            ball->vx *= RESTITUTION;
+            ball->vy *= RESTITUTION;
+        }
+        // stop ball getting stuck in collision
+        float overlap = (distance + ball->radius) - container.radius;
+        ball->centerX += nx * overlap;  
+        ball->centerY += ny * overlap;
     }
 }
-
