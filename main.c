@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     }
 
     Container container = {640.0f, 480.0f, 300.0f};
-    Ball ball = {640.0f, 300.0f, 600.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
+    Ball ball = {640.0f, 300.0f, 300.0f, 0.0f, 20.0f, {255, 255, 255, 255}};
     
     Uint64 lastTime = SDL_GetTicks();
 
