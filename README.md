@@ -36,12 +36,6 @@ Simply, I reversed the equation for the collision detection of two circles.
 Normally, a collision is detected **when the distance between the two circle centers becomes less than the sum of their radii**.  
 In my code, the opposite is necessary — so I simply reversed this logic.
 
-### Reflection and Bouncing
-
-When the ball hits the inner wall of the circular container, its velocity is reflected using basic vector math and physics principles. This ensures realistic bouncing behavior.
-
-#### Collision Detection
-
 A collision is detected when the ball’s outer edge reaches or exceeds the container’s radius:
 
 ```
@@ -51,7 +45,13 @@ if (distance + ball->radius >= container.radius)
 Here, `distance` is the distance between the container’s center and the ball’s center.
 If this sum equals or surpasses the container’s radius, the ball has contacted the wall.
 
-#### Reflection Formula
+
+### Reflection and Bouncing
+
+When the ball hits the inner wall of the circular container, its velocity is reflected using basic vector math and physics principles. This ensures realistic bouncing behavior.
+
+
+#### Formula
 
 Once a collision is detected, the normal vector (pointing inward from the wall) is calculated and used to reflect the velocity:
 
@@ -108,5 +108,9 @@ This ensures the ball doesn’t “stick” or jitter at the boundary.
 | Overlap Fix         | `pos += n * overlap`                    | Prevents sticking at wall         |
 
 This combination of detection, reflection, and correction results in smooth, realistic bouncing motion inside a circular container.
+
+
+Thank you :)
+--- README translated to markdown using ChatGPT ---
 
 
