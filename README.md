@@ -36,3 +36,77 @@ Simply, I reversed the equation for the collision detection of two circles.
 Normally, a collision is detected **when the distance between the two circle centers becomes less than the sum of their radii**.  
 In my code, the opposite is necessary — so I simply reversed this logic.
 
+### Reflection and Bouncing
+
+When the ball hits the inner wall of the circular container, its velocity is reflected using basic vector math and physics principles. This ensures realistic bouncing behavior.
+
+#### Collision Detection
+
+A collision is detected when the ball’s outer edge reaches or exceeds the container’s radius:
+
+```
+if (distance + ball->radius >= container.radius)
+```
+
+Here, `distance` is the distance between the container’s center and the ball’s center.
+If this sum equals or surpasses the container’s radius, the ball has contacted the wall.
+
+#### Reflection Formula
+
+Once a collision is detected, the normal vector (pointing inward from the wall) is calculated and used to reflect the velocity:
+
+```
+ball->vx = ball->vx - 2 * dot * nx;
+ball->vy = ball->vy - 2 * dot * ny;
+```
+
+This applies the reflection formula:
+
+[
+v' = v - 2(v \cdot n)n
+]
+
+where:
+
+* `v` = incoming velocity vector
+* `n` = normalized surface normal
+* `v'` = reflected (outgoing) velocity vector
+* `v · n` = dot product, representing how much of the velocity is directed into the wall
+
+#### Energy Loss (Bounciness)
+
+To make the bounce more realistic, some energy is lost using a **restitution constant**:
+
+```
+ball->vx *= RESTITUTION;
+ball->vy *= RESTITUTION;
+```
+
+* `RESTITUTION = 1` → perfectly elastic bounce (no energy lost)
+* `RESTITUTION < 1` → inelastic bounce (ball slows slightly each hit)
+
+#### Position Correction
+
+After the bounce, the ball may slightly overlap the wall due to numerical rounding.
+To prevent this, the ball’s position is nudged back inside:
+
+```
+ball->centerX += nx * overlap;
+ball->centerY += ny * overlap;
+```
+
+This ensures the ball doesn’t “stick” or jitter at the boundary.
+
+#### Summary
+
+| Concept             | Formula / Code                          | Description                       |
+| ------------------- | --------------------------------------- | --------------------------------- |
+| Collision Detection | `distance + radius >= container.radius` | Detects contact with wall         |
+| Normal Calculation  | `nx = -x_dist / distance`               | Finds inward-facing normal        |
+| Reflection          | `v' = v - 2(v · n)n`                    | Flips velocity across wall normal |
+| Energy Loss         | `v *= RESTITUTION`                      | Simulates bounciness              |
+| Overlap Fix         | `pos += n * overlap`                    | Prevents sticking at wall         |
+
+This combination of detection, reflection, and correction results in smooth, realistic bouncing motion inside a circular container.
+
+
